@@ -12,13 +12,12 @@ st.set_page_config(
 # CSS 스타일은 이전과 동일
 
 # Groq API 키 설정 (환경 변수에서 가져오기)
-api_key = os.getenv("GROQ_API_KEY")
+aapi_key = "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"
 if not api_key:
-    st.error("API 키가 설정되지 않았습니다. 환경 변수 'GROQ_API_KEY'를 설정하세요.")
+    st.error("API 키가 설정되지 않았습니다.")
     st.stop()
 
 # Groq 클라이언트 초기화
-client = Groq(api_key=api_key)
 
 # Qwen 모델 리스트
 AVAILABLE_MODELS = {

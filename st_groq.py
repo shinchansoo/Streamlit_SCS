@@ -38,25 +38,6 @@ with st.sidebar:
         list(AVAILABLE_MODELS.keys())
     )
     
-    # 모델 설정
-    temperature = st.slider(
-        "응답 창의성",
-        min_value=0.0,
-        max_value=1.0,
-        value=0.7,
-        step=0.1,
-        help="높을수록 더 창의적인 응답을 생성합니다"
-    )
-    
-    max_tokens = st.slider(
-        "응답 길이",
-        min_value=100,
-        max_value=4096,
-        value=1024,
-        step=100,
-        help="응답의 최대 길이를 설정합니다"
-    )
-    
     if st.button("대화 내용 지우기", key="clear"):
         st.session_state['chat_history'] = []
         st.rerun()

@@ -1,86 +1,90 @@
 import streamlit as st
-from groq import Client
+from groq import Client  # Groq 라이브러리
 
-# 페이지 기본 설정
+# 🌟 Streamlit 기본 설정
 st.set_page_config(
- page_title="AI 챗봇",
- page_icon="🤖",
- layout="wide"
+    page_title="AI 챗봇",
+    page_icon="🤖",
+    layout="wide"
 )
 
-# API 키 설정 (환경 변수에서 가져오기 또는 하드코딩)
+# 🔑 API 키 설정
 API_KEY = "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"
+
 if not API_KEY:
- st.error("API 키가 설정되지 않았습니다.")
- st.stop()
+    st.error("API 키가 설정되지 않았습니다. 환경 변수를 확인하세요.")
+    st.stop()
 
-# Groq 클라이언트 초기화
+# 🌐 Groq 클라이언트 초기화
 try:
- client = Client(api_key=API_KEY)
+    client = Client(api_key=API_KEY)
 except Exception as e:
- st.error(f"Groq 클라이언트 초기화 중 문제가 발생했습니다: {e}")
- st.stop()
+    st.error(f"Groq 클라이언트 초기화 중 문제가 발생했습니다: {e}")
+    st.stop()
 
-# 지원 모델 리스트
+# 📚 지원 모델 목록
 AVAILABLE_MODELS = {
- "Qwen 2.5 표준": "qwen-2.5-32b",
- "Qwen QWQ 고급": "qwen-qwq-32b",
- "Qwen 2.5 코더": "qwen-2.5-coder-32b"
+    "Qwen 2.5 표준": "qwen-2.5-32b",
+    "Qwen QWQ 고급": "qwen-qwq-32b",
+    "Qwen 2.5 코더": "qwen-2.5-coder-32b"
 }
 
-# 세션 초기화 - 대화 기록 관리
+# 📂 세션 상태 초기화 (대화 기록 관리)
 if "chat_history" not in st.session_state:
- st.session_state['chat_history'] = []
+    st.session_state["chat_history"] = []
 
-# 사이드바 설정
+# 🖋️ 사이드바 UI (설정)
 with st.sidebar:
- st.title("설정")
- st.markdown("---")
- 
- # 사용자가 모델 선택
- selected_model = st.selectbox(
- "사용할 모델을 선택하세요",
- list(AVAILABLE_MODELS.keys())
- )
- 
- # 대화 기록 초기화 버튼
- if st.button("대화 초기화"):
- st.session_state['chat_history'] = []
- st.experimental_rerun()
+    st.title("챗봇 설정")
+    st.markdown("---")
+    
+    # 모델 선택
+    selected_model = st.selectbox(
+        "사용할 모델을 선택하세요",
+        list(AVAILABLE_MODELS.keys())
+    )
+    
+    # 대화 초기화 버튼
+    if st.button("대화 초기화"):  # 버튼 클릭 처리 함수 실행
+        st.session_state["chat_history"] = []  # 대화 기록 초기화
+        st.experimental_rerun()  # 페이지 새로고침
 
-# Groq API를 사용하여 질문에 대한 응답 생성
+
+# 🤖 Groq의 모델 API를 호출해 대답 생성
 def get_response(question, model_name):
- try:
- model_id = AVAILABLE_MODELS[model_name]
- response = client.model(model_id).generate(prompt=question)
- return response.text
- except Exception as e:
- st.error(f"응답 생성 중 문제가 발생했습니다: {e}")
- return None
+    try:
+        model_id = AVAILABLE_MODELS[model_name]  # 선택된 모델 ID 가져오기
+        response = client.model(model_id).generate(prompt=question)  # Groq 호출
+        return response.text
+    except Exception as e:
+        st.error(f"응답 생성 중 문제가 발생했습니다: {e}")
+        return None
 
-# 메인 UI
-st.title("🤖 Groq AI 챗봇")
-st.markdown("Groq AI 모델을 사용하여 질문에 응답하는 챗봇입니다. 질문을 입력하고 응답을 확인하세요.")
 
-# 사용자 입력
-question = st.text_input("질문을 입력하세요:")
+# 🏠 메인 UI
+st.title("🤖 인공지능 챗봇")
+st.markdown("Groq 기반 모델을 사용하여 사용자 질문에 응답하는 챗봇입니다.")
 
-if st.button("질문 보내기"):
- if question.strip(): # 공백만 포함된 질문 방지
- # Groq 모델을 사용하여 응답 생성
- response = get_response(question, selected_model)
- 
- if response:
- # 대화 기록 업데이트
- st.session_state['chat_history'].append({"role": "user", "content": question})
- st.session_state['chat_history'].append({"role": "assistant", "content": response})
-else:
- st.warning("응답을 생성할 수 없습니다. 다시 시도하세요.")
-else:
- st.warning("질문을 입력하세요.")
+# 사용자 질문 입력
+user_input = st.text_input("챗봇과 대화하세요! 질문을 입력하세요:")
 
-# 대화 내용 표시
+# 질문 처리 및 답변 생성
+if st.button("질문하기"):  # 버튼 클릭 시 실행
+    if user_input.strip():  # 입력이 비어있는지 확인
+        # Groq 모델 응답 생성
+        bot_response = get_response(user_input, selected_model)
+        
+        if bot_response:  # 응답 성공 시
+            # 대화 기록 업데이트
+            st.session_state["chat_history"].append({"role": "user", "content": user_input})
+            st.session_state["chat_history"].append({"role": "assistant", "content": bot_response})
+        else:
+            st.warning("응답을 생성하지 못했습니다. 다시 시도해 주세요.")
+    else:
+        st.warning("질문을 입력하세요.")
+
+# 💬 대화 기록 UI
 st.markdown("### 💬 대화 기록")
-for chat in st.session_state['chat_history']:
- role = "🙋‍♂️ 사용자" if chat['role'] == "user" else "🤖 어시스턴트"
- st.markdown(f"**{role}:** {chat['content']}")
+for chat in st.session_state["chat_history"]:
+    role = "🙋 사용자" if chat["role"] == "user" else "🤖 챗봇"
+    st.markdown(f"**{role}:** {chat['content']}")

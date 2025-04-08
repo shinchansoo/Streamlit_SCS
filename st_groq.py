@@ -11,10 +11,10 @@ st.set_page_config(
 
 # CSS 스타일은 이전과 동일
 
-# Groq API 키 설정
-api_key = "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"
+# Groq API 키 설정 (환경 변수에서 가져오기)
+api_key = os.getenv("GROQ_API_KEY")
 if not api_key:
-    st.error("API 키가 설정되지 않았습니다.")
+    st.error("API 키가 설정되지 않았습니다. 환경 변수 'GROQ_API_KEY'를 설정하세요.")
     st.stop()
 
 # Groq 클라이언트 초기화
@@ -73,7 +73,7 @@ with col1:
         if user_input:
             with st.spinner('처리 중...'):
                 st.session_state.chat_history.append(("사용자", user_input))
-                response = get_response(user_input, selected_model, temperature, max_tokens)
+                response = get_response(user_input, selected_model, temp=0.7, max_tok=100)
                 st.session_state.chat_history.append(("어시스턴트", response))
 
 # 채팅 기록 표시

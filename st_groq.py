@@ -1,6 +1,6 @@
 import streamlit as st
 import os
-from groq import Groq
+import openai
 
 # 페이지 기본 설정
 st.set_page_config(
@@ -9,21 +9,16 @@ st.set_page_config(
     layout="wide"
 )
 
-# CSS 스타일은 이전과 동일
-
-# Groq API 키 설정 (환경 변수에서 가져오기)
-aapi_key = "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"
+# OpenAI API 키 설정 (환경 변수에서 가져오기)
+api_key = "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"
 if not api_key:
     st.error("API 키가 설정되지 않았습니다.")
     st.stop()
 
-# Groq 클라이언트 초기화
-
-# Qwen 모델 리스트
+# Qwen 모델 리스트 (OpenAI 모델로 대체)
 AVAILABLE_MODELS = {
-    "Qwen 2.5 표준": "qwen-2.5-32b",
-    "Qwen QWQ 고급": "qwen-qwq-32b",
-    "Qwen 2.5 코더": "qwen-2.5-coder-32b"
+    "GPT-4": "gpt-4",
+    "GPT-3.5 Turbo": "gpt-3.5-turbo"
 }
 
 # 사이드바 설정
@@ -43,15 +38,15 @@ with st.sidebar:
 
 def get_response(question, model_name, temp, max_tok):
     try:
-        chat_completion = client.chat.completions.create(
+        response = openai.ChatCompletion.create(
+            model=AVAILABLE_MODELS[model_name],
             messages=[
                 {"role": "user", "content": question}
             ],
-            model=AVAILABLE_MODELS[model_name],
             temperature=temp,
             max_tokens=max_tok
         )
-        return chat_completion.choices[0].message.content
+        return response['choices'][0]['message']['content']
     except Exception as e:
         return f"오류가 발생했습니다: {str(e)}"
 
@@ -89,7 +84,6 @@ for role, message in st.session_state.chat_history:
 st.sidebar.markdown("---")
 st.sidebar.markdown("""
 ### 모델 정보
-- **Qwen 2.5 표준**: 다양한 작업에 적합한 범용 모델
-- **Qwen QWQ 고급**: 자연스러운 대화에 최적화된 모델
-- **Qwen 2.5 코더**: 프로그래밍과 기술적 작업에 특화된 모델
+- **GPT-4**: OpenAI의 최신 고성능 모델
+- **GPT-3.5 Turbo**: 빠르고 비용 효율적인 모델
 """)

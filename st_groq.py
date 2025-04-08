@@ -24,9 +24,9 @@ except Exception as e:
 
 # 📚 지원 모델 목록
 AVAILABLE_MODELS = {
-    "Qwen 2.5 표준": "qwen-2.5-32b",
-    "Qwen QWQ 고급": "qwen-qwq-32b",
-    "Qwen 2.5 코더": "qwen-2.5-coder-32b"
+    "GEMMA2-9B-IT": "gemma2-9b-it",
+    "DEEPSeek-R1-Distill-Qwen-32B": "deepseek-r1-distill-qwen-32b",
+    "Llama-3.3-70B-StecdEC": "llama-3.3-70b-stecdec"
 }
 
 # 📂 세션 상태 초기화 (대화 기록 관리)

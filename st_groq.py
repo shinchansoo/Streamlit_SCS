@@ -9,7 +9,7 @@ st.set_page_config(
 )
 
 # Groq API 키 설정
-API_KEY = "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"  # Groq API 키를 입력하세요
+API_KEY = "open API KEY"  # Groq API 키를 입력하세요
 if not API_KEY:
     st.error("API 키가 설정되지 않았습니다.")
     st.stop()
